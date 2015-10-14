@@ -32,35 +32,40 @@ import static org.junit.Assert.assertNotNull;
  */
 public class NaiveBayesModelReadWriteTest {
 
-  @Test
-  public void testBinaryModelPersistence() throws Exception {
-    NaiveBayesModel model = (NaiveBayesModel) new NaiveBayesTrainer().trainModel(new TwoPassDataIndexer(
-        NaiveBayesCorrectnessTest.createTrainingStream(), 1, false));
-    Path path = Paths.get(getClass().getResource("/").getFile());
-    Path tempFile = Files.createTempFile(path, "bnb-", ".bin");
-    File file = tempFile.toFile();
-    NaiveBayesModelWriter modelWriter = new BinaryNaiveBayesModelWriter(model, file);
-    modelWriter.persist();
-    NaiveBayesModelReader reader = new BinaryNaiveBayesModelReader(file);
-    reader.checkModelType();
-    AbstractModel abstractModel = reader.constructModel();
-    assertNotNull(abstractModel);
-  }
+	private static final boolean IS_WINDOWS = System.getProperty("os.name").contains("indow");
 
-  @Test
-  public void testTextModelPersistence() throws Exception {
-    NaiveBayesModel model = (NaiveBayesModel) new NaiveBayesTrainer().trainModel(new TwoPassDataIndexer(
-        NaiveBayesCorrectnessTest.createTrainingStream(), 1, false));
-    Path path = Paths.get(getClass().getResource("/").getFile());
-    Path tempFile = Files.createTempFile(path, "ptnb-", ".txt");
-    File file = tempFile.toFile();
-    NaiveBayesModelWriter modelWriter = new PlainTextNaiveBayesModelWriter(model, file);
-    modelWriter.persist();
-    NaiveBayesModelReader reader = new PlainTextNaiveBayesModelReader(file);
-    reader.checkModelType();
-    AbstractModel abstractModel = reader.constructModel();
-    assertNotNull(abstractModel);
-  }
+	@Test
+	public void testBinaryModelPersistence() throws Exception {
+		NaiveBayesModel model = (NaiveBayesModel) new NaiveBayesTrainer()
+				.trainModel(new TwoPassDataIndexer(NaiveBayesCorrectnessTest.createTrainingStream(), 1, false));
+		String fileLocation = getClass().getResource("/").getFile();
+		fileLocation = IS_WINDOWS ? fileLocation.substring(1) : fileLocation;
+		Path path = Paths.get(fileLocation);
+		Path tempFile = Files.createTempFile(path, "bnb-", ".bin");
+		File file = tempFile.toFile();
+		NaiveBayesModelWriter modelWriter = new BinaryNaiveBayesModelWriter(model, file);
+		modelWriter.persist();
+		NaiveBayesModelReader reader = new BinaryNaiveBayesModelReader(file);
+		reader.checkModelType();
+		AbstractModel abstractModel = reader.constructModel();
+		assertNotNull(abstractModel);
+	}
 
+	@Test
+	public void testTextModelPersistence() throws Exception {
+		NaiveBayesModel model = (NaiveBayesModel) new NaiveBayesTrainer()
+				.trainModel(new TwoPassDataIndexer(NaiveBayesCorrectnessTest.createTrainingStream(), 1, false));
+		String fileLocation = getClass().getResource("/").getFile();
+		fileLocation = IS_WINDOWS ? fileLocation.substring(1) : fileLocation;
+		Path path = Paths.get(fileLocation);
+		Path tempFile = Files.createTempFile(path, "ptnb-", ".txt");
+		File file = tempFile.toFile();
+		NaiveBayesModelWriter modelWriter = new PlainTextNaiveBayesModelWriter(model, file);
+		modelWriter.persist();
+		NaiveBayesModelReader reader = new PlainTextNaiveBayesModelReader(file);
+		reader.checkModelType();
+		AbstractModel abstractModel = reader.constructModel();
+		assertNotNull(abstractModel);
+	}
 
 }
