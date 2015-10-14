@@ -46,7 +46,7 @@ public class BratDocumentTest {
 
     assertEquals("voa-with-entities", doc.getId());
     assertTrue(doc.getText().startsWith(" U . S .  President "));
-    assertTrue(doc.getText().endsWith("multinational process . \n"));
+    assertTrue(doc.getText().endsWith("multinational process . \r\n"));
 
     assertEquals(18, doc.getAnnotations().size());
   }
