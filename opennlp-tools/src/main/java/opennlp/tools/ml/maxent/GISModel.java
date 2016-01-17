@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 
+import org.apache.commons.math3.util.FastMath;
+
 import opennlp.tools.ml.model.AbstractModel;
 import opennlp.tools.ml.model.Context;
 import opennlp.tools.ml.model.EvalParameters;
@@ -196,13 +198,13 @@ public final class GISModel extends AbstractModel {
     double normal = 0.0;
     for (int oid = 0; oid < model.getNumOutcomes(); oid++) {
       if (model.getCorrectionParam() != 0) {
-        prior[oid] = Math
+        prior[oid] = FastMath
             .exp(prior[oid]
                 * model.getConstantInverse()
                 + ((1.0 - ((double) numfeats[oid] / model
                     .getCorrectionConstant())) * model.getCorrectionParam()));
       } else {
-        prior[oid] = Math.exp(prior[oid] * model.getConstantInverse());
+        prior[oid] = FastMath.exp(prior[oid] * model.getConstantInverse());
       }
       normal += prior[oid];
     }
